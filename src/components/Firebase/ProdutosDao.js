@@ -11,34 +11,74 @@ import {
     startAfter,
     onValue,
     limitToFirst,
-    limitToLast
+    limitToLast,
+    orderByValue
 } from "firebase/database"
 
-function getOrderByChild(order,db,callback){
+function getOrderByChild(order, db, callback) {
     //Exemplo
     console.log('getOrderByChild');
     console.log(order);
-    const refDB = ref(db,'produtos/');
-    const consulta = query(refDB,orderByChild(order))
+    const refDB = ref(db, 'produtos/');
+    const consulta = query(refDB, orderByChild(order))
     console.log(consulta);
-    onChildAdded(consulta,callback)
+    onChildAdded(consulta, callback)
 }
 
-function getFilterByChild(filter,value, db,callback){
+function getFilterByChild(filter, value, db, callback) {
     console.log(filter);
     console.log(value);
 
     //implement aqui
     console.log('getFilterByChild');
     console.log(filter)
-    const refDB = ref(db,'produtos/');
-    const consulta = query(refDB,equalTo(value, value))
-    onChildAdded(consulta,callback)
+    const refDB = ref(db, 'produtos/');
+    const consulta = query(refDB, orderByChild(filter), equalTo(value))
+    onChildAdded(consulta, callback)
 }
 
-function getMostExpensive(db,setValue,list){
+function getMostExpensive(db, setValue, list) {
+    const limit=3;
+    const filtro = 'preco';
+    // const produtos = [];
+    // let obj = Object;
     console.log('getMostExpensive');
+    // console.log(setValue);
+    // console.log(list);
 
+    // debugger
+    const refDB = ref(db, 'produtos/');
+    const consulta = query(refDB, orderByChild(filtro), limitToLast(limit))
+    onChildAdded(consulta, snapshot => {
+        console.log(snapshot.key);
+        console.log(snapshot.val());
+        list.push([snapshot.key, snapshot.val()])
+        // obj = Object.fromEntries(produtos);
+
+    });
+    // }, setValue([...list]));
+    // console.log(obj);
+    console.log(list);
+    
+    // console.log(obj[])
+
+
+    // debugger
+    list.reverse();
+    // obj = Object.fromEntries(produtos);
+
+    // console.log(obj);
+    console.log(list);
+    setValue([...list]);
+    
+    return setValue([...list]);
+
+
+    // setInterval(()=>{
+    //     if(produtos.length===limit) {
+    //         console.table(Object.fromEntries(produtos))
+    //     }
+    // }, 1000)
     // implement aqui
     /**
      *     Nesta função é necessário implementar o callback,
@@ -51,20 +91,20 @@ function getMostExpensive(db,setValue,list){
      * mais caro. Lembrando que list é um array, use os métodos para trabalhar
      * com arrays em JavaScript! Dica: usem reverse() ou unshift().
      * 
-     *  */ 
+     *  */
 
 
 }
 
-function getMostCheap(db,callback){
+function getMostCheap(db, callback) {
     console.log('getMostCheap');
     //implemente aqui
 }
 
-function getPriceRange(value, db,callback){//0--->limit
+function getPriceRange(value, db, callback) {//0--->limit
     console.log('getPriceRange');
 
     //implemente aqui
 }
 
-export {getOrderByChild, getFilterByChild, getMostExpensive, getMostCheap, getPriceRange}
+export { getOrderByChild, getFilterByChild, getMostExpensive, getMostCheap, getPriceRange }
