@@ -52,59 +52,45 @@ function getMostExpensive(db, setValue, list) {
     onChildAdded(consulta, snapshot => {
         console.log(snapshot.key);
         console.log(snapshot.val());
-        list.push([snapshot.key, snapshot.val()])
-        // obj = Object.fromEntries(produtos);
-
+        list.push(snapshot.val())
     });
-    // }, setValue([...list]));
-    // console.log(obj);
+
     console.log(list);
     
-    // console.log(obj[])
-
-
-    // debugger
     list.reverse();
-    // obj = Object.fromEntries(produtos);
 
     // console.log(obj);
     console.log(list);
     setValue([...list]);
-    
-    return setValue([...list]);
-
-
-    // setInterval(()=>{
-    //     if(produtos.length===limit) {
-    //         console.table(Object.fromEntries(produtos))
-    //     }
-    // }, 1000)
-    // implement aqui
-    /**
-     *     Nesta função é necessário implementar o callback,
-     * pois será necessário ordenar os resultados no cliente
-     * pelos produtos mais caros (reverso). É necessário chamar 
-     * a função setValue() e o array list passados como parametro.
-     * Para repassar os resultados do client React utiliza-se a função
-     * setValue() com os parametros [...list], ou seja, setValue([...list])
-     * onde em list deverá estar o array de produtos ordenados pelo preco
-     * mais caro. Lembrando que list é um array, use os métodos para trabalhar
-     * com arrays em JavaScript! Dica: usem reverse() ou unshift().
-     * 
-     *  */
-
-
 }
 
 function getMostCheap(db, callback) {
     console.log('getMostCheap');
     //implemente aqui
+    const limit=3;
+    const filtro = 'preco';
+
+    // console.log(db);
+    // console.log(list);
+
+    const refDB = ref(db, 'produtos/');
+    const consulta = query(refDB, orderByChild(filtro), limitToFirst(limit))
+    onChildAdded(consulta, callback)
 }
 
 function getPriceRange(value, db, callback) {//0--->limit
     console.log('getPriceRange');
-
     //implemente aqui
+    const filtro = 'preco';
+    console.log(value);
+    let newvalue = parseFloat(value);
+    console.log(newvalue);
+    console.log(filtro);
+
+    const refDB = ref(db, 'produtos/');
+    const consulta = query(refDB, orderByChild(filtro), endAt(newvalue))
+    // console.log(consulta)
+    onChildAdded(consulta, callback);
 }
 
 export { getOrderByChild, getFilterByChild, getMostExpensive, getMostCheap, getPriceRange }
